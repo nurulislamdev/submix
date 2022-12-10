@@ -40,6 +40,7 @@ parser.add_argument(
 parser.add_argument(
     "-r", "--remove", help="remove existing valid.txt file", required=False
 )
+parser.add_argument("-o", "--option", help="set option 1 / 2", required=False)
 parser.add_argument("-m", "--method", help="set method http / https", required=True)
 parser.add_argument("-fm", "--fast", help="fast print yes / no", required=True)
 parser.add_argument(
@@ -57,8 +58,8 @@ subdomain = list()
 valid_subdomain_list = list()
 error_subdomain_list = list()
 
-class main_system:
 
+class main_system:
     def method_check():
         if args.method == "http":
             method = "http"
@@ -99,8 +100,13 @@ class main_system:
             if main_system.get_data_by_rapiddns("subdomain_num").text == "0":
                 pass
             else:
-                print(red + " [-] " + green + "Total sub domain find in rapid dns: " + str(
-                main_system.get_data_by_rapiddns("subdomain_num").text))
+                print(
+                    red
+                    + " [-] "
+                    + green
+                    + "Total sub domain find in rapid dns: "
+                    + str(main_system.get_data_by_rapiddns("subdomain_num").text)
+                )
         web = str(args.url)
         req = requests.get(rapiddns.format(web), timeout=20)
         soup = bs(req.text, "html.parser")
@@ -137,9 +143,17 @@ class main_system:
                                     subdomains.append(subname_value)
                                     all_subdomain.append(subname_value)
                                     if args.fast == "yes":
-                                        print(red + " [ 111 ] " + yellow + subname_value)
+                                        print(
+                                            red + " [ 111 ] " + yellow + subname_value
+                                        )
             if args.fast == "yes":
-                print(red + " [-] " + green + "Total sub domain find in crtsh: " + str(len(subdomains)))
+                print(
+                    red
+                    + " [-] "
+                    + green
+                    + "Total sub domain find in crtsh: "
+                    + str(len(subdomains))
+                )
             print(green + "[+] done")
         except:
             print("Something went wrong in crt sub domain finder")
@@ -366,15 +380,38 @@ class main_system:
         main_system.banner()
         main_system.url_check()
         print(yellow + "[*] looking for sub domains....")
-        if int(main_system.get_data_by_rapiddns("subdomain_num").text) == 0:
-            pass
+        if args.option == str(1) and args.check == "no":
+            if int(main_system.get_data_by_rapiddns("subdomain_num").text) == 0:
+                pass
+            else:
+                main_system.rapiddns_subdomain_collection_purify()
+        elif args.option == str(2) and args.check == "no":
+            main_system.crtsh()
+        elif args.option == str(1) and args.check == "yes":
+            if int(main_system.get_data_by_rapiddns("subdomain_num").text) == 0:
+                pass
+            else:
+                main_system.rapiddns_subdomain_collection_purify()
+                main_system.write_file_1()
+                main_system.valid_subdomain()
+                main_system.write_file_2()
+                main_system.write_file_3()
+        elif args.option == str(2) and args.check == "yes":
+            main_system.crtsh()
+            main_system.write_file_1()
+            main_system.valid_subdomain()
+            main_system.write_file_2()
+            main_system.write_file_3()
         else:
-            main_system.rapiddns_subdomain_collection_purify()
-        main_system.crtsh()
-        main_system.write_file_1()
-        main_system.valid_subdomain()
-        main_system.write_file_2()
-        main_system.write_file_3()
+            if int(main_system.get_data_by_rapiddns("subdomain_num").text) == 0:
+                pass
+            else:
+                main_system.rapiddns_subdomain_collection_purify()
+            main_system.crtsh()
+            main_system.write_file_1()
+            main_system.valid_subdomain()
+            main_system.write_file_2()
+            main_system.write_file_3()
 
 
 try:
@@ -382,6 +419,6 @@ try:
 except KeyboardInterrupt:
     print(red + "Quitting now")
     print(green + "Thanks for using me....")
-except:
-    print(red + "[-] Something went wrong")
-    print(yellow + "[?] Please try again with a new terminal window")
+# except:
+#     print(red + "[-] Something went wrong")
+#     print(yellow + "[?] Please try again with a new terminal window")
