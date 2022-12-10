@@ -1,9 +1,12 @@
 # submix
 A ultimate subdomain finder without Api key
 
-    Code: php
+# Installation
+    pip3 install -r requirements.txt
+This will install requirements.
 
-    <?php
-    /** <SNIP> */
-    /** The name of the database for WordPress */
-    define( 'DB_NAME', 'database_name_here' );
+# Uses
+Example:
+
+    python .\submix.py -u google.com -m https -r remove -c no -fm no
+    
